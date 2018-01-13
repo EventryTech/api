@@ -1,23 +1,53 @@
-# The following types define the data model of the example service
-# based on which the GraphQL API is generated
+type Group @model {
+  id: ID! @isUnique
+  name: String!
+  description: String!
+  events: [Event!]! @relation(name: "EventOfGroup")
+  adminUsers: [User!]! @relation(name: "AdminUsersOfGroup")
+  joinUsers: [User!]! @relation(name: "JoinUsersOfGroup")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Event @model {
+  id: ID! @isUnique
+  name: String!
+  group: Group! @relation(name: "EventOfGroup")
+  date: DateTime!
+  place: Place @relation(name: "EventAtPlace")
+  adminUsers: [User!]! @relation(name: "AdminUsersOfEvent")
+  presenterUsers: [User!]! @relation(name: "PresenterUsersOfEvent")
+  joinUsers: [User!]! @relation(name: "JoinUsersOfEvent")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
+
+type Place @model {
+  id: ID! @isUnique
+  name: String!
+  events: [Event!]! @relation(name: "EventAtPlace")
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
 
 type User @model {
   id: ID! @isUnique
   name: String
-  dateOfBirth: DateTime
-
-  # Uncomment below - you can declare relations between models like this
-
-  # posts: [Post!]! @relation(name: "UserPosts")
+  adminGroups: [Group!]! @relation(name: "AdminUsersOfGroup")
+  joinGroups: [Group!]! @relation(name: "JoinUsersOfGroup")
+  adminEvents: [Event!]! @relation(name: "AdminUsersOfEvent")
+  presenterEvents: [Event!]! @relation(name: "PresenterUsersOfEvent")
+  joinEvents: [Event!]! @relation(name: "JoinUsersOfEvent")
+  createdAt: DateTime!
+  updatedAt: DateTime!
 }
 
-
-# Uncomment the model below as well
-
-# type Post @model {
-#   id: ID! @isUnique
-#   title: String!
-#
-#   # Every relation also required a back-relation (to determine 1:1, 1:n or n:m)
-#   author: User! @relation(name: "UserPosts")
-# }
+type Schedule @model {
+  id: ID! @isUnique
+  name: String!
+  description: String
+  startDateTime: DateTime!
+  finishDateTime: DateTime
+  createdAt: DateTime!
+  updatedAt: DateTime!
+}
