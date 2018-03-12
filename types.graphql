@@ -2,9 +2,9 @@ type Group @model {
   id: ID! @isUnique
   name: String!
   description: String!
-  events: [Event!]! @relation(name: "EventOfGroup")
-  adminUsers: [User!]! @relation(name: "AdminUsersOfGroup")
-  joinUsers: [User!]! @relation(name: "JoinUsersOfGroup")
+  places: [Place!]! @relation(name: "GroupPlaces")
+  events: [Event!]! @relation(name: "GroupEvents")
+  users: [User!]! @relation(name: "GroupUsers")
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -12,12 +12,10 @@ type Group @model {
 type Event @model {
   id: ID! @isUnique
   name: String!
-  group: Group! @relation(name: "EventOfGroup")
   date: DateTime!
-  place: Place @relation(name: "EventAtPlace")
-  adminUsers: [User!]! @relation(name: "AdminUsersOfEvent")
-  presenterUsers: [User!]! @relation(name: "PresenterUsersOfEvent")
-  joinUsers: [User!]! @relation(name: "JoinUsersOfEvent")
+  group: Group @relation(name: "GroupEvents")
+  place: Place @relation(name: "PlaceEvents")
+  users: [User!]! @relation(name: "UserEvents")
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -25,7 +23,8 @@ type Event @model {
 type Place @model {
   id: ID! @isUnique
   name: String!
-  events: [Event!]! @relation(name: "EventAtPlace")
+  group: Group @relation(name: "GroupPlaces")
+  events: [Event!]! @relation(name: "PlaceEvents")
   createdAt: DateTime!
   updatedAt: DateTime!
 }
@@ -33,21 +32,8 @@ type Place @model {
 type User @model {
   id: ID! @isUnique
   name: String
-  adminGroups: [Group!]! @relation(name: "AdminUsersOfGroup")
-  joinGroups: [Group!]! @relation(name: "JoinUsersOfGroup")
-  adminEvents: [Event!]! @relation(name: "AdminUsersOfEvent")
-  presenterEvents: [Event!]! @relation(name: "PresenterUsersOfEvent")
-  joinEvents: [Event!]! @relation(name: "JoinUsersOfEvent")
-  createdAt: DateTime!
-  updatedAt: DateTime!
-}
-
-type Schedule @model {
-  id: ID! @isUnique
-  name: String!
-  description: String
-  startDateTime: DateTime!
-  finishDateTime: DateTime
+  groups: [Group!]! @relation(name: "GroupUsers")
+  events: [Event!]! @relation(name: "UserEvents")
   createdAt: DateTime!
   updatedAt: DateTime!
 }
